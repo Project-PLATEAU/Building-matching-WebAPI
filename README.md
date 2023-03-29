@@ -35,7 +35,7 @@
 
 - API 詳細
 
-    [WebAPI「2D 建物マッチング機能」](https://project-plateau.github.io/PLATEAU-UC22-008-Building-matching-WebAPI/manual/10_webapi.html#2d) を参照してください。
+    [WebAPI「2D 建物マッチング機能」](https://project-plateau.github.io/UC22-008-Building-matching-WebAPI/manual/10_webapi.html#2d) を参照してください。
 
 #### <a name="3d_pointcloud">3D 点群マッチング機能</a>
 
@@ -62,7 +62,7 @@
 
 - API 詳細
 
-    [WebAPI「3D 点群マッチング機能」](https://project-plateau.github.io/PLATEAU-UC22-008-Building-matching-WebAPI/manual/10_webapi.html#3d_pointcloud) を参照してください。
+    [WebAPI「3D 点群マッチング機能」](https://project-plateau.github.io/UC22-008-Building-matching-WebAPI/manual/10_webapi.html#3d_pointcloud) を参照してください。
 
 #### <a name="3d_texture">3D テクスチャマッピング機能</a>
 
@@ -87,10 +87,10 @@
 
 - API 詳細
 
-    [WebAPI「3D テクスチャマッピング機能」](https://project-plateau.github.io/PLATEAU-UC22-008-Building-matching-WebAPI/manual/10_webapi.html#3d_texture) を参照してください。
+    [WebAPI「3D テクスチャマッピング機能」](https://project-plateau.github.io/UC22-008-Building-matching-WebAPI/manual/10_webapi.html#3d_texture) を参照してください。
 
 ## 3．利用手順
-インストール方法・使い方は[こちら](https://project-plateau.github.io/PLATEAU-UC22-008-Building-matching-WebAPI/)
+インストール方法・使い方は[こちら](https://project-plateau.github.io/UC22-008-Building-matching-WebAPI/)
 
 ## ライセンス <!-- 定型文のため変更しない -->
 * ソースコードおよび関連ドキュメントの著作権は国土交通省に帰属します。
