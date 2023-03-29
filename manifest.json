@@ -1,0 +1,430 @@
+{
+  "homepages": [],
+  "source_base_path": "C:/Users/043358/docfx_project",
+  "xrefmap": "xrefmap.yml",
+  "files": [
+    {
+      "type": "Conceptual",
+      "source_relative_path": "index.md",
+      "output": {
+        ".html": {
+          "relative_path": "index.html",
+          "hash": "BhzZzEgErDMRzqwonZ+++uNpFqjyoY/uyJBe8Juc9jQ="
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "manual/01_install.md",
+      "output": {
+        ".html": {
+          "relative_path": "manual/01_install.html",
+          "hash": "NgDxo/9gUhjPUeMdYu4HA3dg8riYIPsyGcNviHRVKrw="
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "manual/02_demo.md",
+      "output": {
+        ".html": {
+          "relative_path": "manual/02_demo.html",
+          "hash": "abCkoaitSrbv0cHa0SYYn1ZrEtDmnft/+WhCUXHuU/w="
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "manual/10_webapi.md",
+      "output": {
+        ".html": {
+          "relative_path": "manual/10_webapi.html",
+          "hash": "FNzdi/pPSQI+6jJpQHXyhuqJC3leDoLhs0YDU+b+XuY="
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "manual/90_create_data.md",
+      "output": {
+        ".html": {
+          "relative_path": "manual/90_create_data.html",
+          "hash": "W62kWqnjLPF+WiTkXZ4qiwvak6zKRLsrW/K6B5MLw+Y="
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "manual/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "manual/toc.html",
+          "hash": "/st4TajXfEiOHRfrMH1Kcx8ZP7LKlUkIgBOEfgplgSA="
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/manual/building2d.jpg",
+      "output": {
+        "resource": {
+          "relative_path": "resources/manual/building2d.jpg"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/manual/create_data/gsi_basemap_download1.jpg",
+      "output": {
+        "resource": {
+          "relative_path": "resources/manual/create_data/gsi_basemap_download1.jpg"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/manual/create_data/gsi_basemap_download2.jpg",
+      "output": {
+        "resource": {
+          "relative_path": "resources/manual/create_data/gsi_basemap_download2.jpg"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/manual/create_data/gsi_basemap_download3.jpg",
+      "output": {
+        "resource": {
+          "relative_path": "resources/manual/create_data/gsi_basemap_download3.jpg"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/manual/create_data/gsi_basemap_download4.jpg",
+      "output": {
+        "resource": {
+          "relative_path": "resources/manual/create_data/gsi_basemap_download4.jpg"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/manual/create_data/gsi_basemap_filelist.jpg",
+      "output": {
+        "resource": {
+          "relative_path": "resources/manual/create_data/gsi_basemap_filelist.jpg"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/manual/create_data/qgis_add_layer.jpg",
+      "output": {
+        "resource": {
+          "relative_path": "resources/manual/create_data/qgis_add_layer.jpg"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/manual/create_data/qgis_copy_features_as_geojson.jpg",
+      "output": {
+        "resource": {
+          "relative_path": "resources/manual/create_data/qgis_copy_features_as_geojson.jpg"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/manual/create_data/qgis_global_option.jpg",
+      "output": {
+        "resource": {
+          "relative_path": "resources/manual/create_data/qgis_global_option.jpg"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/manual/create_data/qgis_imported.jpg",
+      "output": {
+        "resource": {
+          "relative_path": "resources/manual/create_data/qgis_imported.jpg"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/manual/create_data/qgis_save_as_geojson.jpg",
+      "output": {
+        "resource": {
+          "relative_path": "resources/manual/create_data/qgis_save_as_geojson.jpg"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/manual/create_data/qgis_save_selected_features_as.jpg",
+      "output": {
+        "resource": {
+          "relative_path": "resources/manual/create_data/qgis_save_selected_features_as.jpg"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/manual/create_data/qgis_select_file.jpg",
+      "output": {
+        "resource": {
+          "relative_path": "resources/manual/create_data/qgis_select_file.jpg"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/manual/create_data/qgis_select_transformation.jpg",
+      "output": {
+        "resource": {
+          "relative_path": "resources/manual/create_data/qgis_select_transformation.jpg"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/manual/create_data/select_building_file.jpg",
+      "output": {
+        "resource": {
+          "relative_path": "resources/manual/create_data/select_building_file.jpg"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/manual/demo/2d-matching.jpg",
+      "output": {
+        "resource": {
+          "relative_path": "resources/manual/demo/2d-matching.jpg"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/manual/demo/2d-matching_sample2.jpg",
+      "output": {
+        "resource": {
+          "relative_path": "resources/manual/demo/2d-matching_sample2.jpg"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/manual/demo/2d-matching_sample2_response.jpg",
+      "output": {
+        "resource": {
+          "relative_path": "resources/manual/demo/2d-matching_sample2_response.jpg"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/manual/demo/3d-matching.jpg",
+      "output": {
+        "resource": {
+          "relative_path": "resources/manual/demo/3d-matching.jpg"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/manual/demo/3d-matching_mapping.jpg",
+      "output": {
+        "resource": {
+          "relative_path": "resources/manual/demo/3d-matching_mapping.jpg"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/manual/demo/3d-matching_match3d.jpg",
+      "output": {
+        "resource": {
+          "relative_path": "resources/manual/demo/3d-matching_match3d.jpg"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/manual/demo/3d-matching_match3d_infobox.jpg",
+      "output": {
+        "resource": {
+          "relative_path": "resources/manual/demo/3d-matching_match3d_infobox.jpg"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/manual/demo/3d-matching_zip.jpg",
+      "output": {
+        "resource": {
+          "relative_path": "resources/manual/demo/3d-matching_zip.jpg"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/manual/demo/meshlab_import.jpg",
+      "output": {
+        "resource": {
+          "relative_path": "resources/manual/demo/meshlab_import.jpg"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/manual/demo/meshlab_view.jpg",
+      "output": {
+        "resource": {
+          "relative_path": "resources/manual/demo/meshlab_view.jpg"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/manual/demo/meshlab_view_lod2.jpg",
+      "output": {
+        "resource": {
+          "relative_path": "resources/manual/demo/meshlab_view_lod2.jpg"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/manual/install/docker_containers.jpg",
+      "output": {
+        "resource": {
+          "relative_path": "resources/manual/install/docker_containers.jpg"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/manual/install/extract_zip.jpg",
+      "output": {
+        "resource": {
+          "relative_path": "resources/manual/install/extract_zip.jpg"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/manual/install/run_powershell.jpg",
+      "output": {
+        "resource": {
+          "relative_path": "resources/manual/install/run_powershell.jpg"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/manual/install/website_top.jpg",
+      "output": {
+        "resource": {
+          "relative_path": "resources/manual/install/website_top.jpg"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/manual/lod2_coverage.jpg",
+      "output": {
+        "resource": {
+          "relative_path": "resources/manual/lod2_coverage.jpg"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/manual/pointcloud3d.jpg",
+      "output": {
+        "resource": {
+          "relative_path": "resources/manual/pointcloud3d.jpg"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/manual/sample_las.jpg",
+      "output": {
+        "resource": {
+          "relative_path": "resources/manual/sample_las.jpg"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/manual/texture3d.jpg",
+      "output": {
+        "resource": {
+          "relative_path": "resources/manual/texture3d.jpg"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "toc.html",
+          "hash": "q5/KS6DR92j0N/3v4vNc3CW8JuYrJunlZ+XPEJq+ACE="
+        }
+      },
+      "version": ""
+    }
+  ],
+  "version_info": {},
+  "groups": [
+    {
+      "xrefmap": "xrefmap.yml"
+    }
+  ]
+}
