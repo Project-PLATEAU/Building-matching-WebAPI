@@ -1,0 +1,186 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+  <head>
+    <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>インストール手順 </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="インストール手順 ">
+    
+      <link rel="shortcut icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../styles/docfx.vendor.css">
+      <link rel="stylesheet" href="../styles/docfx.css">
+      <link rel="stylesheet" href="../styles/main.css">
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+
+
+<p>このページでは、建物IDマッチング WebAPI の設定手順を説明します。</p>
+<ul>
+<li><a href="#install_docker">Docker Desktop をインストール</a></li>
+<li><a href="#download">コードを取得</a></li>
+<li><a href="#extract">Zip ファイルを展開</a></li>
+<li><a href="#shell">PowerShell を開く</a></li>
+<li><a href="#build">イメージのビルド</a></li>
+<li><a href="#start_server">ウェブサーバ実行</a></li>
+<li><a href="#open_app">デモアプリケーションを開く</a></li>
+<li><a href="#uninstall">停止・アンインストール手順</a></li>
+</ul>
+<p>本ソフトウェアは、Linux システム上で動作するサーバアプリケーションとして開発されています。運用目的でのインストールや実行には Linux およびウェブサーバの管理スキルが必要ですが、開発や動作確認用ならば Windows や Mac 上の Docker Desktop で動かすこともできます。</p>
+<p>Windows および MacOS 用の Docker Desktop および Ubuntu 用の Docker Engine で動作を確認していますが、このページでは例として Windows PowerShell + Docker Desktop での手順を説明します。</p>
+<p>Docker Desktop をまだインストールしていない場合は、
+先に</p>
+<h2 id="docker-desktop-をインストール"><a name="install_docker">Docker Desktop をインストール</a></h2>
+<p>まず <a href="https://docs.docker.com/desktop/">Docker Desktop の公式サイト</a>からダウンロード、インストールしてください。既にインストール済みの場合は、念のため最新バージョンにアップデートしてください。</p>
+<p><a href="https://docs.docker.com/desktop/install/windows-install/">Windows へのインストール手順</a> は以下の通りです (2023年2月22日時点)。</p>
+<ul>
+<li>管理者権限を持つアカウントでログイン。</li>
+<li><a href="https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe">Docker Desktop for Windows をダウンロード</a>。</li>
+<li>ダウンロードした <code>Docker Desktop Installer.exe</code> をダブルクリックして実行。</li>
+<li>もし確認ウィンドウが表示されたら、 &quot;Use WSL 2 instead of Hyper-V&quot; オプションを選択（システムによっては表示されないこともあります）。</li>
+<li>あとは画面表示に従ってインストール。</li>
+</ul>
+<p>インストールが完了したら、スタートボタンから <strong>Docker Desktop</strong> を見つけて実行してください。</p>
+<h2 id="コードを取得"><a name="download">コードを取得</a></h2>
+<p>ソフトウェア一式を GitHub サイトからダウンロードします。</p>
+<p>ウェブブラウザで <a href="https://github.com/Project-PLATEAU/PLATEAU-UC22-008-Building-matching-WebAPI/archive/refs/heads/main.zip">https://github.com/Project-PLATEAU/PLATEAU-UC22-008-Building-matching-WebAPI/archive/refs/heads/main.zip</a> にアクセスし、ダウンロードした <code>PLATEAU-UC22-008-Building-matching.WebAPI-main.zip</code> を任意のディレクトリに置いてください。</p>
+<h2 id="zip-ファイルを展開"><a name="extract">Zip ファイルを展開</a></h2>
+<p>エクスプローラーで Zip ファイルをダブルクリックして開き、「すべて展開」ボタンを押して含まれているファイルを展開します。</p>
+<img src="../resources/manual/install/extract_zip.jpg" title="Zip ファイルを展開" style="border: 1px solid #888;">
+<h2 id="powershell-を開く"><a name="shell">PowerShell を開く</a></h2>
+<p>Win + R キーを押し、「ファイル名を指定して実行」ダイアログが開いたら <code>powershell</code> と入力して OK ボタンを押します。</p>
+<img src="../resources/manual/install/run_powershell.jpg" title="PowerShellを開く" style="border: 1px solid #888; width:300px;">
+<p>PowerShell のプロンプトに <code>chdir</code> と入力し、先ほど Zip ファイルを展開したフォルダ名を入力します。</p>
+<blockquote>
+<p>ヒント：PowerShell のウィンドウにエクスプローラーからフォルダをドラッグ＆ドロップしても入力できます。</p>
+</blockquote>
+<p>Enter キーを押してフォルダを移動します。</p>
+<h2 id="イメージのビルド"><a name="build">イメージのビルド</a></h2>
+<p>PowerShell のプロンプトに以下のコマンドを入力し、 Docker で実行するイメージを作成します。</p>
+<pre><code>&gt; docker compose build
+</code></pre>
+<p>この処理にはしばらく時間がかかります。実行中の処理が表示されますので、終了するまで待ってください。 <code>Use 'docker scan' to run Snyk tests...</code> と表示され、プロンプトが表示されれば成功です。</p>
+<blockquote>
+<p>Apple シリコン搭載の Mac を利用する場合、一部のライブラリをコンパイルしなおす必要があるため、docker compose の後に <code>-f dockercompose-armmac.yml</code> を指定してください。。</p>
+</blockquote>
+<pre><code>&gt; docker compose -f dockercompose-armmac.yml build
+</code></pre>
+<h2 id="ウェブサーバ実行"><a name="start_server">ウェブサーバ実行</a></h2>
+<p>PowerShell のプロンプトに以下のコマンドを入力し、 Docker 上でウェブサーバを起動します。</p>
+<pre><code>&gt; docker compose up -d
+</code></pre>
+<p>次のように表示されるはずです（時間は環境によって異なります）。</p>
+<pre><code>[+] Running 4/4
+ - Network plateau-uc22-008-building-matching-webapi-main_default     Created                                      0.0s
+ - Volume &quot;plateau-uc22-008-building-matching-webapi-main_pgdb_data&quot;  Created                                      0.0s
+ - Container pgdb                                                     Started                                      2.6s
+ - Container webapi                                                   Started                                      2.6s
+</code></pre>
+<p>Docker Desktop のウィンドウでは、 Containers のページで 2 つのコンテナが実行中であることを確認できます。</p>
+<img src="../resources/manual/install/docker_containers.jpg" title="Docker Desktop" style="border: 1px solid #888;">
+<p><code>pgdb</code> はデータベース管理システム <a href="https://www.postgresql.org/">PostgreSQL</a> サーバで、PLATEAU データの検索機能を提供します。
+<code>webapi</code> は WebAPI 機能を提供するウェブサーバです。</p>
+<h2 id="デモアプリケーションを開く"><a name="open_app">デモアプリケーションを開く</a></h2>
+<p>ウェブサーバが起動したら、ウェブブラウザで <a href="http://localhost:5000/">ローカルホストの port 5000</a> を開いてください。</p>
+<img src="../resources/manual/install/website_top.jpg" title="デモアプリケーション" style="border: 1px solid #888;">
+<p>上部の「2D-WebAPIデモ」および「3D-WebAPIデモ」から WebAPI の機能を試す画面に移動することができます。</p>
+<p>以上でインストール完了です。</p>
+<h2 id="停止アンインストール手順"><a name="uninstall">停止・アンインストール手順</a></h2>
+<p>起動したコンテナを停止するには、 Zip ファイルを展開したフォルダで次のコマンドを実行します。</p>
+<pre><code>&gt; docker compose down -v
+</code></pre>
+<p>Docker Desktop ウィンドウの Containers 画面で <code>pgdb</code> と <code>webapi</code> が消えていることを確認してください。</p>
+<p>その後、 Docker Desktop ウィンドウの Images 画面で <code>plateau-uc22-008-building-matching-webapi-webapi</code> と <code>postgis/postgis</code> を削除します。</p>
+<p>Volumes 画面で <code>plateau-uc22-008-building-matching-webapi_pgdb_data</code> が残っている場合はこれも削除します。</p>
+<p>あとは Zip ファイルを展開したフォルダごと削除してください。</p>
+<p>以上でアンインストール完了です。</p>
+</article>
+          </div>
+
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In This Article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+      
+      <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

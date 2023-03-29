@@ -1,0 +1,209 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+  <head>
+    <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>デモアプリ利用方法 </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="デモアプリ利用方法 ">
+    
+      <link rel="shortcut icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../styles/docfx.vendor.css">
+      <link rel="stylesheet" href="../styles/docfx.css">
+      <link rel="stylesheet" href="../styles/main.css">
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+
+
+<p>このページでは、建物IDマッチング WebAPI のテスト用デモアプリケーションの利用方法を説明します。</p>
+<p>先に <a href="01_install.html">インストール手順</a> に従ってデモアプリケーションのウェブサーバを実行してください。</p>
+<ul>
+<li><a href="02_demo.html#2D_demo">2D-WebAPIデモ</a></li>
+<li><a href="02_demo.html#3D_demo">3D-WebAPIデモ</a></li>
+</ul>
+<h2 id="2d-webapi-デモ"><a name="2D_demo">2D-WebAPI デモ</a></h2>
+<p>ページ上部の「2D-WebAPIデモ」リンクをクリックすると、2D 建物マッチング機能のデモ画面が開きます。</p>
+<blockquote>
+<p>このデモで利用できる地域は「沼津市全域」です。それ以外の地域はサンプルデータベースに登録されていないため、検索できません。</p>
+</blockquote>
+<img src="../resources/manual/demo/2d-matching.jpg" title="2D-WebAPIデモ" style="border: 1px solid #888;">
+<ul>
+<li><p>GeoJSON のセットと地図表示</p>
+<p>「サンプル1」「サンプル2」「サンプル3」というボタンを押すと、上部のテキストエリアにサンプルデータの GeoJSON が上部のテキストエリアに、その下に GeoJSON をオレンジ色で描画した地図が表示されます。</p>
+<blockquote>
+<p>サンプルにない GeoJSON を試したい場合は、テキストエリアに GeoJSON を貼りつけ、「地図表示」ボタンを押してください。</p>
+</blockquote>
+  <img src="../resources/manual/demo/2d-matching_sample2.jpg" title="サンプル2を表示" style="border: 1px solid #888;">
+</li>
+<li><p>マッチング実行</p>
+<p>テキストエリアの下の「マッチング」ボタンを押すと、「2D 建物マッチング機能」WebAPI に GeoJSON を送信し、その建物と一致する 3D都市モデルの建物データを取得します。</p>
+<p>WebAPI のレスポンスも GeoJSON （FeatureCollection）データです。地図上に緑色で描画し、ページ下部のテキストエリアに GeoJSON 文字列をそのまま表示します。</p>
+  <img src="../resources/manual/demo/2d-matching_sample2_response.jpg" title="マッチング実行" style="border: 1px solid #888;">
+<p>レスポンスの各フィーチャーの properties には、検索した GeoJSON の properties に含まれる <code>devDate</code>, <code>fid</code> ... <code>type</code> などの属性がそのまま含まれていることが確認できます。</p>
+<p>また、元の建物データには無かった以下の属性が追加されます。</p>
+<ul>
+<li><code>plateau_bldid</code>: 一致した3D都市モデルの建物データの ID</li>
+<li><code>plateau_area</code>: 一致した3D都市モデルの建物データの面積</li>
+<li><code>intersection_area</code>: 検索した建物と3D都市モデルの建物データの重なり合った部分の面積</li>
+<li><code>source_area</code>: 検索した建物の面積</li>
+<li><code>area_ratio</code>: 検索した建物の面積の3D都市モデルの建物データの面積に対する比率</li>
+<li><code>dist</code>: それぞれの重心間の距離</li>
+<li><code>confidence</code>: マッチング確信度（high または low）</li>
+</ul>
+<p>面積の単位は平方メートル、距離の単位はメートルです。</p>
+</li>
+<li><p>各サンプルの説明</p>
+<p>「サンプル1」はもっとも単純なケースで、検索した1つの建物が1つの 3D都市モデルの建物データにマッチする例です。少しだけ形状が異なりますが、ほぼ重なっているため同じ建物と判定されます。</p>
+<p>「サンプル2」は少し複雑なケースで、検索した建物（小学校）に対する 3D都市モデルの建物データが複数に分割されている例です。レスポンスを確認すると5つのフィーチャーから構成されていることが分かります。</p>
+<p>「サンプル3」は複数の建物を問い合わせるケースです。レスポンスの各 3D都市モデルの建物データには、検索した建物の中でもっとも一致すると判定されたものの属性が付与されます。検索した建物に識別子となる属性が含まれていれば、どの 3D都市モデルの建物データと対応したか判定できます。</p>
+</li>
+</ul>
+<h2 id="3d-webapi-デモ"><a name="3D_demo">3D-WebAPI デモ</a></h2>
+<p>ページ上部の「3D-WebAPIデモ」リンクをクリックすると、3D 点群マッチング機能と3Dテクスチャマッピング機能のデモ画面が開きます。</p>
+<blockquote>
+<p>このデモで利用できる地域は沼津駅北側の一部（国土基本図図郭コードが 08NE3801）に限られます。それ以外の地域はサンプルデータベースに登録されていないため、検索できません。</p>
+</blockquote>
+<img src="../resources/manual/demo/3d-matching.jpg" title="3D-WebAPIデモ" style="border: 1px solid #888;">
+<p>3D WebAPI では、問い合わせに LAS データが必要です。テクスチャマッピングに適した MMS データは <a href="https://www.geospatial.jp/ckan/dataset/shizuoka-2019-pointcloud/resource/7b986b95-c5a0-4a14-823c-129de28ee2a8?view_id=29dd1ab9-7f70-45ab-90ed-6e194c2d2ac9">MMSデータ ダウンロードページ（G空間情報センター）</a> からダウンロード可能ですが、そのままではファイルが大きすぎるため、
+サンプルデータベースに含まれる地域の LAS データから数棟の建物が含まれる程度に切り出したサンプルデータ（約746MB）を用意してあります。<a href="https://digitalcityservice-building-matching.s3.ap-northeast-1.amazonaws.com/22/222038/08NE3801_LAS.zip">こちらからダウンロード</a>してください。</p>
+<h3 id="3d-点群マッチング機能"><a name="3D_matching">3D 点群マッチング機能</a></h3>
+<p>「3D 点群マッチング機能」は、 LAS ファイルに含まれている PLATEAU 建物を検索し、点群データとどの程度一致しているかを評価する機能です。</p>
+<ul>
+<li><p>点群データに含まれる建物を検索</p>
+<p>「ファイルを選択」ボタン（ブラウザによって表記が違います）を押して、アップロードする LAS ファイルを指定してください。</p>
+<p>「系番号」には「8系」を選択してください。これは<a href="https://www.gsi.go.jp/LAW/heimencho.html">平面直角座標系</a>の系番号を指定するもので、このデモアプリに登録されている沼津市はVIII系の適用区域に含まれます。</p>
+<p>設定したら「このファイルに含まれる建物を検索」ボタンを押してください。「検索中です。しばらくお待ちください。」と表示されます。この処理には LAS ファイルのサイズやマシンスペックにもよりますが10秒から30秒程度かかります。</p>
+<p>処理が終わると表示が「検索完了」に変わり、ページ下部の地図上に建物が描画されます。下の図はサンプルデータの <code>08NE3801_06.las</code> をアップロードして検索した結果です。</p>
+  <img src="../resources/manual/demo/3d-matching_match3d.jpg" title="3D 点群マッチング機能" style="border: 1px solid #888;">
+</li>
+<li><p>検索結果</p>
+<p>緑色の建物は建物表面全体の 40% 以上の範囲が点群データに含まれていたことを示します。道路から見て裏側は点群データがないことを考慮すると、道路から見える表面の大部分に点群データがあることになります。オレンジ色は 20% 以上、赤色は 20% 未満を表します。</p>
+<p>地図上の建物をクリックすると、より詳しい情報がポップアップします。各項目の意味は次の通りです。</p>
+<ul>
+<li>建物ID: 3D都市モデルの建物データの ID</li>
+<li>壁面面積: LoD2 モデルから算出した、この建物の壁面面積</li>
+<li>テクスチャ面積: アップロードされた点群データから作成可能なテクスチャの面積</li>
+<li>網羅率: 壁面面積に対するテクスチャ面積の割合</li>
+<li>エラー率: 建物の領域内にある点データのうち、壁面付近にない点の割合</li>
+</ul>
+  <img src="../resources/manual/demo/3d-matching_match3d_infobox.jpg" title="検索結果詳細" style="border: 1px solid #888;">
+</li>
+</ul>
+<h3 id="3d-テクスチャマッピング機能"><a name="3D_texture">3D テクスチャマッピング機能</a></h3>
+<p>「3D テクスチャマッピング機能」は、 LAS ファイルに含まれている点群データを指定した建物に射影し、壁面のテクスチャ画像を含む 3D都市モデルを生成する機能です。</p>
+<ul>
+<li><p>テクスチャマッピング（3D テクスチャマッピング機能）</p>
+<p>マッチングに利用した点群データを引き続き利用して建物の壁面画像を作成し、テクスチャマッピングした3D都市モデルを作成します。「マッピングの設定」の下の各項目に次のように指定してください。</p>
+<p>「対象の建物ID」に 3D都市モデルの建物データの IDを入力します。検索結果の建物ポリゴンをクリックすればその建物の ID が入力されますので、緑色の建物（22203-bldg-97011）をクリックしてください。</p>
+<p>「LOD」には作成したいモデルの LOD を指定します。1の方が単純な形状なので処理は速く終わりますが、2の方がよりリアルなモデルが得られます。まずは1を指定してください。</p>
+<p>「処理する最大点数」は、点群データを建物の領域で切り出したときに点の数が多すぎると処理に時間がかかるため、上限を設定するものです。ここで指定した値より多くの点が含まれていた場合、ダウンサンプリング処理を行って点の数を減らします。その分処理は速くなりますが、画像は粗くなります。ここではデフォルトの「普通（40万）」のままにします。</p>
+<p>「テクスチャマッピング手法」は点を面にマッピングする計算方法を選択します。ここもデフォルトの「自動判定したしきい値より距離が近い面にマッピング」のままにします。</p>
+<p>「テクスチャ画像の解像度」は壁面ごとの画像の長辺の画素数を指定します。通常は「普通（512ピクセル）」で問題ないですが、小さな建物の場合は「粗い（256ピクセル）」でも十分ですし、駅ビルのような大きな建物の場合は「細かい（1024ピクセル）」の方がきれいな結果が得られます。ここもデフォルトの「普通（512ピクセル）」のままにします。</p>
+<p>設定が終わったら「マッピング実行」ボタンを押してください。「処理中です。しばらくお待ちください。」と表示されます。設定した最大点数やLODにもよりますが、この処理には30秒から数分間かかることがあります。</p>
+<p>処理が終わると「処理完了」と表示が変わり、自動的に zip ファイルのダウンロードが始まります。</p>
+  <img src="../resources/manual/demo/3d-matching_mapping.jpg" title="マッピングの設定" style="border: 1px solid #888;">
+</li>
+<li><p>マッピング結果</p>
+<p>ダウンロードされるファイルは <code>obj3d_22203-bldg-97011_lod1_smart_512_400k.zip</code> のような名前の zip ファイルです。 obj3d は共通の接頭辞で、そのあとに 3D都市モデルの建物データの ID (22203-bldg-97011) 、選択したLOD (lod1)、マッピング手法 (smart)、画像解像度 (512)、最大点数 (400k) が続きます。</p>
+<p>この zip ファイルを展開すると、1つの obj ファイル、1つのmtlファイル、最大で壁面数分の PNG ファイル、テクスチャがない壁面用の no_texture.png ファイルが含まれています。</p>
+  <img src="../resources/manual/demo/3d-matching_zip.jpg" title="Zip ファイルの内容" style="border: 1px solid #888;">
+</li>
+<li><p>モデルの可視化</p>
+<p>ダウンロードした 3D都市モデルを可視化するには 3D ビューアが必要です。オープンソースの 3D ビューア <a href="https://www.meshlab.net/">MeshLab</a> が便利です。</p>
+<p>MeshLab を起動し、メニューの File &gt; Import Mesh を選択します。ダイアログが表示されるので、ダウンロードした zip ファイルを展開してから obj ファイルを選択してください。</p>
+  <img src="../resources/manual/demo/meshlab_view.jpg" title="MeshLab で可視化" style="border: 1px solid #888;">
+<p>同じ建物を LOD=2 でマッピングすると、よりリアルなモデルが得られます。</p>
+  <img src="../resources/manual/demo/meshlab_view_lod2.jpg" title="Zip LoD2 の場合" style="border: 1px solid #888;">
+</li>
+</ul>
+<p>デモアプリケーションの機能は以上です。</p>
+</article>
+          </div>
+
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In This Article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+      
+      <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

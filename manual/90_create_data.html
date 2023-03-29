@@ -1,0 +1,214 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+  <head>
+    <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>データ作成方法 </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="データ作成方法 ">
+    
+      <link rel="shortcut icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../styles/docfx.vendor.css">
+      <link rel="stylesheet" href="../styles/docfx.css">
+      <link rel="stylesheet" href="../styles/main.css">
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+
+
+<p>このページでは、建物IDマッチング WebAPI で利用するデータの作り方について説明します。</p>
+<h2 id="plateau-citygml-からデータを作成する手順"><a name="plateau_to_postgis">PLATEAU CityGML からデータを作成する手順</a></h2>
+<p>本ソフトウェアで利用する建物データを PLATEAU CityGML から作成する手順を説明します。サンプルデータ以外の地域で利用したい場合には、この手順を参考にして対象地域用のデータを作成してください。</p>
+<ul>
+<li><p>データベース作成作業のため、 <code>dbbuild</code> ディレクトリに移動してください。</p>
+<pre><code>  $ cd dbbuild/
+</code></pre>
+</li>
+<li><p>G空間情報センターの<a href="https://www.geospatial.jp/ckan/dataset/plateau">3D都市モデル (Project PLATEAU) ポータルサイト</a> から、<a href="https://www.geospatial.jp/ckan/dataset/plateau-22203-numazu-shi-2020">静岡県沼津市の2020年度版</a> ページを探し、 CityGML をダウンロードします (681MB）。</p>
+</li>
+<li><p>ダウンロードした zip ファイル (<code>22203_numazu-shi_2020_citygml_3_op.zip</code>) の中の <code>udx/bldg</code> を、カレントディレクトリの下の data ディレクトリに展開します。</p>
+<pre><code>  $ unzip 22203_numazu-shi_2020_citygml_3_op.zip 22203_numazu-shi_2020_citygml_3_op/udx/bldg/\*
+  $ mv 22203_numazu-shi_2020_citygml_3_op/udx/bldg data
+</code></pre>
+<p><code>data/</code> ディレクトリの下に多数の gml ファイルが配置されているはずです。</p>
+</li>
+<li><p>GDAL を利用して CityGML を PostGIS に登録します。</p>
+<p>まず PostGIS コンテナをバックグラウンドで起動します。</p>
+<pre><code>  $ docker compose up -d pg15
+</code></pre>
+<p>次に GDAL コンテナを利用して CityGML を変換しながら PostGIS コンテナ内のテーブルに結果を登録します。</p>
+<pre><code>  $ docker compose run --rm gdal bash /conf/store_plateau.sh
+</code></pre>
+<p>この処理にはマシンスペックにもよりますが、10分間程度かかります。また、処理中に以下の警告が表示されますが、 GML ファイルごとにテーブルを作らずに1つのテーブルに追記しているために表示されるものなので問題ありません。</p>
+<pre><code>  Warning 1: Layer creation options ignored since an existing layer is being appended to.
+</code></pre>
+</li>
+<li><p>データ変換</p>
+<p>PostGIS にインポートしたデータから、本ソフトウェア用の
+テーブルにデータを変換します。データの変換手順は <code>conf/01_convert_plateau.sql</code> に記述してありますので、この SQL ファイルを PostGIS コンテナ内で実行します。</p>
+<pre><code>  $ docker compose exec pg15 psql -U postgres -f /conf/01_convert_plateau.sql
+</code></pre>
+</li>
+<li><p>データベースダンプの作成</p>
+<p>作成したテーブルからダンプファイルを作成します。ファイル名は拡張子が <code>.dump.gz</code> であれば何でも構いませんが、いつ作成したファイルか分かるように YYYYMMDD に作業した年月日を記載しておくと間違いを防げます。</p>
+<pre><code>  $ docker compose exec pg15 pg_dump -U postgres -t plateau_buildings_lod1 -t plateau_buildings_lod2 --no-owner | gzip -c &gt; pgdb-YYYYMMDD.dump.gz
+</code></pre>
+</li>
+<li><p>ダンプファイルを登録</p>
+<p><code>initdb.d</code> に置いてある古いデータベースダンプファイルを削除し、作成した <code>pgdb-YYYYMMDD.dump.gz</code> を <code>initdb.d</code> に移動します。このディレクトリに配置されたダンプファイルは、アプリケーションの PostgreSQL にデータベースが存在しない場合に自動的に読み込まれます。</p>
+<pre><code>  $ rm ../initdb.d/pgdb-*.dump.gz
+  $ mv pgdb-YYYYMMDD.dump.gz ../initdb.d/
+</code></pre>
+</li>
+<li><p>作業用 Docker コンテナ・イメージの削除</p>
+<p>作業が終わり、この後データ作成用の Docker コンテナと永続ボリュームを利用しない場合は、以下のコマンドで削除します。</p>
+<pre><code>  $ docker compose down -v
+</code></pre>
+<p>また、 <code>osgeo/gdal</code> イメージも不要であれば削除して構いません。 Docker Desktop の GUI で確認する方が簡単なので、 Docker Desktop を起動して Images メニューを開き、 <code>osgeo/gdal</code> を削除してください。</p>
+</li>
+<li><p>データベースの更新</p>
+<p>アプリケーションの PostgreSQL コンテナ（pgdb）を一度初期化して、再度起動してください。データベースが空になるので、<code>initdb.d</code> ディレクトリに置かれたデータベースダンプファイルを自動的に読み込み、データベースを更新します。</p>
+<pre><code>  $ cd ../
+  $ docker compose down -v
+  $ docker compose up -d
+</code></pre>
+</li>
+</ul>
+<p>以上で本ソフトウェア用の建物データを作成する手順は終わりです。</p>
+<h2 id="2d-デモ検索用-geojson-の作り方"><a name="create_2d_geojson">2D デモ検索用 GeoJSON の作り方</a></h2>
+<p>2D 建物データはさまざまな地図データから作成できますが、ここでは一般利用が可能な国土地理院の「基盤地図情報」を利用する方法を紹介します。</p>
+<p>地図データの操作のため、オープンソースの<a href="https://qgis.org/">地理情報システム QGIS</a> を利用しますので、お持ちでない場合はインストールしてください。</p>
+<ul>
+<li><p>基盤地図情報のダウンロード</p>
+<p>まずウェブブラウザで <a href="https://fgd.gsi.go.jp/download/">基盤地図情報ダウンロードサービス</a> を開き、「ダウンロード」の中から「基本項目」の「ファイル選択へ」ボタンを押します。</p>
+  <img src="../resources/manual/create_data/gsi_basemap_download1.jpg" title="基盤地図情報ダウンロードサービス" style="border: 1px solid #888;">
+<p>次にダウンロードする地域を選択します。デモアプリでは静岡県沼津市の建物データしか登録していないため、「選択方法指定」で「都道府県または市区町村で選択」をチェックし、沼津市を選択してから「選択リストに追加」ボタンを押してください。</p>
+  <img src="../resources/manual/create_data/gsi_basemap_download2.jpg" title="地域選択" style="border: 1px solid #888;">
+<p>選択リストから沼津市の中心部を含む「523856」を残して削除し、「ダウンロードファイル確認へ」ボタンを押します。</p>
+  <img src="../resources/manual/create_data/gsi_basemap_download3.jpg" title="メッシュ選択" style="border: 1px solid #888;">
+<p>ダウンロードファイルリストが表示されますので、「基盤地図情報 最新データ」と書かれているファイルの右側の「ダウンロード」ボタンを押してファイルを取得します。</p>
+  <img src="../resources/manual/create_data/gsi_basemap_download4.jpg" title="ダウンロード" style="border: 1px solid #888;">
+<p>ログインIDとパスワードの入力画面が表示されるので、国土地理院の共通ログインIDとパスワードを入力し、ログインボタンを押します。まだIDを持っていない場合は「新規登録」リンクからアカウントを作成してください。</p>
+</li>
+<li><p>ダウンロードしたファイルを展開</p>
+<p>ダウンロードしたファイル <code>FG-GML-523856-ALL-20221001.zip</code> を任意のフォルダに展開します。ファイルはレイヤごとに分かれているので、建物を含む <code>FG-GML-523856-BldA-20221001-0001.xml</code> ファイルのパスを覚えておいてください。</p>
+  <img src="../resources/manual/create_data/gsi_basemap_filelist.jpg" title="ファイルリスト" style="border: 1px solid #888;">
+</li>
+<li><p>QGIS にインポート</p>
+<p>QGIS を起動し、新しいプロジェクトを作ります。ここに先ほど展開した XML ファイルから建物データをインポートします。</p>
+<p>メインメニューから Layer &gt; Add Layer &gt; Add Vector Layer を選択します。</p>
+  <img src="../resources/manual/create_data/qgis_add_layer.jpg" title="QGIS にインポート" style="border: 1px solid #888;">
+<p>Data Source Manager ダイアログが開くので、 Source の Vector Dataset(s) に XML ファイルのパスを入力します。右側のボタンを押すとファイル選択ダイアログが表示されるので、そちらから選択しても構いません。</p>
+  <img src="../resources/manual/create_data/qgis_select_file.jpg" title="Data Source Manager" style="border: 1px solid #888;">
+<p>ファイルを選択すると Options が表示されますが、ここは特に変更する必要がないので、そのまま右下の Add ボタンを押します。</p>
+<p>すると座標系変換の方法を選択するダイアログが表示されます。一番上に表示されているものが通常最も精度が高いので、そのまま OK ボタンを押します。</p>
+  <img src="../resources/manual/create_data/qgis_select_transformation.jpg" title="変換方法の選択" style="border: 1px solid #888;">
+<p>インポートが完了すると、建物データが地図上に表示されます。少しつぶれているのは座標系として経緯度を単位とする EPSG:6668 (JGD2011) が選択されているためなので、問題ありません。</p>
+  <img src="../resources/manual/create_data/qgis_imported.jpg" title="インポート完了" style="border: 1px solid #888;">
+</li>
+<li><p>GeoJSON データをファイルにエクスポート</p>
+<p>GeoJSON として保存したい建物を選択します（操作方法については <a href="https://docs.qgis.org/3.22/en/docs/user_manual/introduction/general_tools.html#selecting-manually-on-the-map-canvas">QGIS ドキュメント</a> を参照してください）。</p>
+<p>選択した建物が黄色くマークされている状態で、 Layers パネルの FG-GML... レイヤを右クリックしてプルダウンメニューを開き、 Export &gt; Save Selected Features As... をクリックします。</p>
+  <img src="../resources/manual/create_data/qgis_save_selected_features_as.jpg" title="選択したフィーチャーを保存" style="border: 1px solid #888;">
+<p>Save Vector Layer as... ダイアログが表示されるので、 Format 欄を <code>GeoJSON</code>、 Geometry の Geometry type を <code>Polygon</code> に変更し、 File name に保存したいファイル名を指定して OK ボタンを押すと GeoJSON ファイルが保存されます。</p>
+  <img src="../resources/manual/create_data/qgis_save_as_geojson.jpg" width="50%" height="50%" title="GeoJSONとして保存" style="border: 1px solid #888;">
+</li>
+<li><p>GeoJSON データをクリップボードにコピー</p>
+<p>QGIS 上で選択したフィーチャーを Edit &gt; Copy Features （または Ctrl+C）でクリップボードにコピーする際に、グローバルオプションを設定しておくと GeoJSON としてコピーできるようになります。</p>
+<p>メインメニューの Settings &gt; Options を選択します。</p>
+  <img src="../resources/manual/create_data/qgis_global_option.jpg" title="選択したフィーチャーをGeoJSONとしてコピー" style="border: 1px solid #888;">
+<p>Options ダイアログが表示されるので、左メニューで Data Sources を選択し、右側の Feature Attributes and Table ブロック内、 Copy features as のプルダウンで GeoJSON を選択します。</p>
+  <img src="../resources/manual/create_data/qgis_copy_features_as_geojson.jpg" title="オプション設定" style="border: 1px solid #888;">
+<p>あとは任意の建物フィーチャーを選択し、Ctrl+C でクリップボードにコピーすると GeoJSON になるので、テキストエディタやテキスト入力欄に貼り付けられます。</p>
+</li>
+</ul>
+<p>以上で 2D デモ検索用の GeoJSON 作成手順は終わりです。</p>
+</article>
+          </div>
+
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In This Article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+      
+      <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>
