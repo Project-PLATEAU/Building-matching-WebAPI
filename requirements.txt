@@ -1,0 +1,15 @@
+open3d
+Shapely == 1.8.4
+SQLAlchemy >= 1.4, < 2.0
+Flask-Cors
+psycopg2
+GeoAlchemy2
+geopandas
+requests
+laspy
+Pillow
+numpy
+scipy
+gunicorn
+psutil
+markdown

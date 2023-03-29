@@ -1,0 +1,542 @@
+openapi: 3.0.3
+info:
+  title: PLATEAU Buildings Matching API
+  description: |-
+    様々な入力データを PLATEAU 建物データと照合し、リンクする WebAPI です。
+  contact:
+    email: sagara@aigid.jp
+  # termsOfService: 未定
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 0.1.0
+
+externalDocs:
+  description: PLATEAU by MLIT
+  url: https://www.mlit.go.jp/plateau/
+
+servers:
+  - url: https://uc22-008.aigid.jp/api/
+
+tags:
+  - name: 2d
+    description: 2次元データ
+  - name: 3d
+    description: 3次元データ
+
+paths:
+  /search-plateau:
+    get:
+      tags:
+        - 2d
+      summary: PLATEAU 建物情報の取得
+      description: 建物IDで指定した PLATEAU 建物の情報を GeoJSON で返します。
+      operationId: search_plateau
+      parameters:
+        - name: bldid
+          in: query
+          description: 検索したい建物ID
+          required: true
+          explode: true
+          schema:
+            type: string
+            example: 22203-bldg-22489
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Plateau2d'
+        '400':
+          description: Invalid status value
+
+  /search-plateau-in:
+    post:
+      tags:
+        - 2d
+      summary: PLATEAU 建物情報リストの取得
+      description: GeoJSON Polygon で指定した領域と交差する PLATEAU 建物の情報を GeoJSON (FeatureCollection)で返します。
+      operationId: search_plateau_in_geojson
+      requestBody:
+        description: 検索したい領域を表す GeoJSON (Polygon のみ)
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                type: Polygon
+                coordinates:
+                  - - - 138.8554067396186
+                      - 35.10439772617502
+                    - - 138.85980628516026
+                      - 35.10439772617502
+                    - - 138.85980628516026
+                      - 35.10708910443064
+                    - - 138.8554067396186
+                      - 35.10708910443064
+                    - - 138.8554067396186
+                      - 35.10439772617502
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlateauCollection2d'
+        '400':
+          description: Invalid status value
+    get:
+      tags:
+        - 2d
+      summary: PLATEAU 建物リストの取得
+      description: 図郭番号で指定した領域と交差する PLATEAU 建物の情報を GeoJSON (FeatureCollection) で返します。
+      operationId: search_plateau_in_meshcode
+      parameters:
+        - name: meshcode
+          in: query
+          description: 検索したい領域を笑わす図郭番号
+          required: true
+          explode: true
+          schema:
+            type: string
+            example: 08NE3801
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlateauCollection2d'
+        '400':
+          description: Invalid status value
+
+  /zukaku:
+    get:
+      tags:
+        - 2d
+      summary: 図郭ポリゴンの取得
+      description: 図郭番号で指定した領域に対応するポリゴンを GeoJSON (Polygon) で返します。
+      operationId: search_mesh
+      parameters:
+        - name: meshcode
+          in: query
+          description: 検索したい領域を表す図郭番号
+          required: true
+          explode: true
+          schema:
+            type: string
+            example: 08NE3801
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  type: Polygon
+                  coordinates:
+                    - - - 138.8554067396186
+                        - 35.10439772617502
+                      - - 138.85980628516026
+                        - 35.10439772617502
+                      - - 138.85980628516026
+                        - 35.10708910443064
+                      - - 138.8554067396186
+                        - 35.10708910443064
+                      - - 138.8554067396186
+                        - 35.10439772617502
+        '400':
+          description: Invalid status value
+  
+  /match:
+    post:
+      tags:
+        - 2d
+      summary: 2DポリゴンとPLATEAUのマッチング
+      description: Post された GeoJSON ポリゴンにマッチする PLATEAU 建物の情報を返します。
+      operationId: match
+      requestBody:
+        description: 検索したい建物の GeoJSON (Feature / Polygon)
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BuildingPolygon'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MatchResult'          
+        '400':
+          description: Invalid input
+
+  /crop-las/{bldid}:
+    get:
+      tags:
+        - 3d
+      summary: 三次元点群を PLATEAU 建物で切りだし
+      description: 指定した PLATEAU 建物で点群を切り出し、 PLY ファイルを返します。
+      operationId: crop_las
+      parameters:
+        - name: bldid
+          in: path
+          description: 切り出す対象の PLATEAU 建物ID
+          required: true
+          explode: true
+          schema:
+            type: string
+            example: 22203-bldg-97124
+        - name: limit
+          in: query
+          description: 点群に含まれる点の最大数 (k, m 利用可)、 0 で無制限
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: 10k
+            example: 50k
+      responses:
+        '200':
+          description: successful operation
+          content:
+            text/plain:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Invalid status value
+      
+  /obj3d/{bldid}:
+    get:
+      tags:
+        - 3d
+      summary: 三次元点群を PLATEAU 建物壁面にマッピング
+      description: 指定した PLATEAU 建物で点群を切り出し、壁面にマッピングしたテクスチャ付き 3D モデルを zip ファイルとして返します。
+      operationId: get_obj3d
+      parameters:
+        - name: bldid
+          in: path
+          description: 切り出す対象の PLATEAU 建物ID
+          required: true
+          explode: true
+          schema:
+            type: string
+            example: 22203-bldg-97124
+        - name: size
+          in: query
+          description: テクスチャ画像の長辺のピクセル数
+          required: false
+          explode: true
+          schema:
+            type: integer
+            default: 512
+            example: 512
+        - name: method
+          in: query
+          description: テクスチャマッピング手法
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: smart
+            enum:
+              - nearest
+              - all
+              - smart
+        - name: lod
+          in: query
+          description: PLATEAU 建物の LOD (1 or 2)
+          required: false
+          schema:
+            type: integer
+            default: 1
+            example: 1
+        - name: limit
+          in: query
+          description: 点群に含まれる点の最大数 (k, m 利用可)、0 で無制限
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: 10k
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/zip:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Invalid status value
+
+  /check_las:
+    post:
+      tags:
+        - 3d
+      summary: 点群ファイルに含まれる建物リストを取得
+      description: Post された点群ファイル（LAS形式）に含まれる PLATEAU 建物のリストと、それぞれの建物領域内の点の数および壁面近くの点の数、壁面の総面積を返します。点の数は 1m グリッドにダウンサンプリングした上でカウントします。
+      operationId: check_las
+      requestBody:
+        description: 点群ファイル
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - file
+                - bldid
+              properties:
+                file:
+                  type: string
+                  format: binary
+                srid:
+                  type: integer
+                  description: LAS ファイルの座標系（デフォルトは8系）
+                  default: 6676
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckLasResult'          
+        '400':
+          description: Invalid input
+
+  /match_las:
+    post:
+      tags:
+        - 3d
+      summary: 点群ファイルを指定した建物にマッピング
+      description: Post された点群ファイル（LAS形式）を指定した建物で切り出し、壁面にマッピングしたテクスチャ付き 3D モデルを zip ファイルとして返します。
+      operationId: match_las
+      requestBody:
+        description: 点群ファイル
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - file
+                - bldid
+              properties:
+                file:
+                  type: string
+                  format: binary
+                bldid:
+                  type: string
+                  description: 切り出す対象の PLATEAU 建物ID
+                  example: 22203-bldg-97124
+                srid:
+                  type: integer
+                  description: LAS ファイルの座標系（デフォルトは8系）
+                  default: 6676
+                imagesize:
+                  type: integer
+                  description: テクスチャ画像の長辺のピクセル数
+                  default: 512
+                method:
+                  type: string
+                  description: テクスチャマッピング手法
+                  default: smart
+                  enum:
+                    - smart
+                    - nearest
+                    - all
+                lod:
+                  type: integer
+                  description: PLATEAU 建物の LOD (1 or 2)
+                  default: 1
+                  enum:
+                    - 1
+                    - 2
+                limit:
+                  type: string
+                  description: 点群に含まれる点の最大数 (k, m 利用可)、 0 で無制限
+                  default: 10k
+                  example: 10k
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/zip:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Invalid input
+
+components:
+  schemas:
+    Plateau2d:
+      type: object
+      description: PLATEAU 建物の 2D GeoJSON
+      properties:
+        type:
+          type: string
+          description: 常に Polygon
+          example: Polygon
+        properties:
+          type: object
+          properties:
+            plateau_area:
+              type: number
+              description: 建物の面積 (m2)
+              example: 240.9401
+            plateau_bldid:
+              type: string
+              description: 建物ID
+              example: 22203-bldg-22489
+        geometry:
+          type: object
+          description: ジオメトリを表す GeoJSON (Polygon)
+          example:
+            type: Polygon
+            coordinates:
+              - - - 138.79986795441167
+                  - 35.12653090127563
+                - - 138.7999358325791
+                  - 35.126669556705906
+                - - 138.80008377908777
+                  - 35.12662060231599
+                - - 138.800015901042
+                  - 35.12648203711272
+                - - 138.79986795441167
+                  - 35.12653090127563
+
+    PlateauCollection2d:
+      type: object
+      description: PLATEAU 建物リストの 2D GeoJSON
+      properties:
+        type:
+          type: string
+          description: 常に FeatureCollection
+          example: FeatureCollection
+        features:
+          type: array
+          items:
+            $ref: '#/components/schemas/Plateau2d'
+
+    BuildingPolygon:
+      required:
+        - type
+      type: object
+      description: 入力ポリゴン（Polygon, MultiPolygon または Feature タイプの GeoJSON）
+      properties:
+        type:
+          type: string
+          example: "Feature"
+        properties:
+          type: object
+          description: Feature の場合の入力ポリゴンの属性
+          example:
+            fid: 64222
+        geometry:
+          type: object
+          description: Feature の場合の GeoJSON Polygon
+          example:
+            type: Polygon
+            coordinates:
+              - - - 138.79995583
+                  - 35.1266925
+                - - 138.80014306
+                  - 35.12663333
+                - - 138.80007472
+                  - 35.12648583
+                - - 138.79988722
+                  - 35.12654472
+                - - 138.79995583
+                  - 35.1266925
+        coordinates:
+          type: array
+          description: Polygon, MultiPolygon の場合の座標列
+          items:
+            type: number
+
+    MatchResult:
+      type: object
+      description: match API が返す FeatureCollection GeoJSON
+      properties:
+        type:
+          type: string
+          description: 常に FeatureCollection
+          example: FeatureCollection
+        features:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                description: 常に Feature
+                example: Feature
+              properties:
+                type: object
+                properties:
+                  confidence:
+                    type: string
+                    description: 一致度の確からしさ (high, low)
+                    example: high
+                  dist:
+                    type: number
+                    description: ポリゴンの重心間の距離 (m)
+                    example: 3.88
+                  intersection_area:
+                    type: number
+                    description: ポリゴン同士が重なる部分の面積 (m2)
+                    example: 195.7563
+                  plateau_area:
+                    type: number
+                    description: PLATEAU 建物の面積 (m2)
+                    example: 240.9401
+                  plateau_bldid:
+                    type: string
+                    description: PLATEAU 建物ID
+                    example: 22203-bldg-22489
+                  polygon_area:
+                    type: number
+                    description: 入力ポリゴンの面積 (m2)
+                    example: 320.6022
+
+    CheckLasResult:
+      type: object
+      description: check_las API が返す FeatureCollection GeoJSON
+      properties:
+        type:
+          type: string
+          description: 常に FeatureCollection
+          example: FeatureCollection
+        features:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                description: 常に Feature
+                example: Feature
+              properties:
+                type: object
+                properties:
+                  area:
+                    type: number
+                    description: 壁面の総面積 (m2)
+                    example: 1300.86
+                  num_points_in_region:dist:
+                    type: integer
+                    description: 建物領域内の 1m グリッドでの点の数
+                    example: 552
+                  num_points_near_wall:
+                    type: integer
+                    description: 建物壁面付近の 1m グリッドでの点の数
+                    example: 413
+                  plateau_bldid:
+                    type: string
+                    description: PLATEAU 建物ID
+                    example: 22203-bldg-97159

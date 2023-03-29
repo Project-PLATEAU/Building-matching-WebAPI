@@ -1,0 +1,9 @@
+# DEBUG
+DEBUG=True
+
+## PostgreSQL (local)
+POSTGRES_HOST=localhost
+POSTGRES_DB=pgdb
+POSTGRES_USER=pguser
+POSTGRES_PASSWORD=pgpass
+POSTGRES_PORT=5432
