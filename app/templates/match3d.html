@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+{% block title %}3次元点群 APIデモ{% endblock %}
+{% block head %}
+    {{ super() }}
+    <style>
+        .leaflet-container {
+            height: 400px;
+            width: 600px;
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        textarea.full {
+            width: 600px;
+            height: 240px;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+<div id="source" style="border:solid 1px; padding: 5px;">
+    <form enctype="multipart/form-data" id="upload_form">
+        <h2>点群データの設定</h2>
+        <p>LAS ファイル：<input type="file" name="file" /></p>
+        <p>系番号：
+            <select name="srid">
+                <option value="6669">1 系</option>
+                <option value="6670">2 系</option>
+                <option value="6671">3 系</option>
+                <option value="6672">4 系</option>
+                <option value="6673">5 系</option>
+                <option value="6674">6 系</option>
+                <option value="6675">7 系</option>
+                <option value="6676" selected=selected>8 系</option>
+                <option value="6677">9 系</option>
+                <option value="6678">10 系</option>
+                <option value="6679">11 系</option>
+                <option value="6680">12 系</option>
+                <option value="6681">13 系</option>
+                <option value="6682">14 系</option>
+                <option value="6683">15 系</option>
+                <option value="6684">16 系</option>
+                <option value="6685">17 系</option>
+                <option value="6686">18 系</option>
+                <option value="6687">19 系</option>
+            </select>
+        </p>
+        <button id="checkButton" type="button">このファイルに含まれる建物を検索</button>
+        <span id="check_note"> </span>
+
+        <h2>マッピングの設定</h2>
+        <p>対象の建物ID：
+            <input type="text" name="bldid" id="bldid" value="" />
+        </p>
+        <p>LOD：
+            <select id="lod" name="lod">
+                <option value="1" selected=selected>1</option>
+                <option value="2">2</option>
+            </select>
+        </p>
+        <p>処理する最大点数：
+            <select id="limit" name="limit">
+                <option value="100k">粗い (10万)</option>
+                <option value="400k" selected=selected>普通 (40万)</option>
+                <option value="800k">細かい (80万)</option>
+                <option value="0">制限なし</option>
+            </select>
+        </p>
+        <p>テクスチャマッピング手法：
+            <select id="mapping_method" name="mapping_method">
+                <option value="nearest">最も近い面にマッピング</option>
+                <option value="all">全ての点をマッピング</option>
+                <option value="smart" selected=selected>自動判定したしきい値より距離が近い面にマッピング</option>
+            </select>
+        </p>
+        <p>テクスチャ画像の解像度：
+            <select id="size" name="size">
+                <option value="256">粗い (256ピクセル)</option>
+                <option value="512" selected=selected>普通 (512ピクセル)</option>
+                <option value="1024">細かい (1024ピクセル)</option>
+            </select>
+        </p>
+        <button id="mappingButton" type="button">
+        マッピング実行</button> <span id="mapping_note"> </span>
+    </form>
+</div>
+
+<div id="map"></div>
+
+<script>
+    var map = L.map('map').setView([35.0954,138.8635], 13);
+    var layers = [];
+
+    var tiles = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        attribution: '&copy; <a href="https://maps.gsi.go.jp/development/ichiran.html">地理院タイル</a>'
+    }).addTo(map);
+
+    function clear_layers() {
+        for (layer of layers) {
+            map.removeLayer(layer);
+        }
+        layers = [];
+    }
+
+    $("#checkButton").on("click", function() {
+        let fd = new FormData($("#upload_form")[0]);
+        clear_layers();
+        $("#check_note").html("検索中です。しばらくお待ちください。");
+        $.ajax({
+            url: "{{ url_for('api.check_las') }}",
+            type: "POST",
+            data: fd,
+            processData: false,
+            contentType: false,
+            cache: false,
+        }).done(function(feature_collection) {
+            $("#result").text(JSON.stringify(feature_collection));
+            for (feature of feature_collection["features"]) {
+                var bldid = feature.properties.plateau_bldid;
+                var npoints_in_region = feature.properties.num_points_in_region;
+                var npoints_near_wall = feature.properties.num_points_near_wall;
+                var area = feature.properties.area;
+                var coverage_ratio = Math.round(1000.0 * npoints_near_wall / area) / 10.0;
+                var popup_message = "建物ID: " + bldid + "<br />壁面面積: " + area + "㎡<br />テクスチャ面積: 約" + npoints_near_wall + "㎡<br/>網羅率: " + coverage_ratio + "%";
+                if (npoints_in_region == 0) {
+                    popup_message += "<br/>エラー率: (敷地内に点群がありません)";
+                } else {
+                    var error_ratio = Math.round(1000.0 - 1000.0 * npoints_near_wall / npoints_in_region) / 10.0;
+                    popup_message += "<br/>エラー率: " + error_ratio + "%";
+                }
+                var error_ratio = Math.round(1000.0 - npoints_near_wall * 1000.0 / npoints_in_region) / 10.0;
+                var color = "#ff0000";
+                if (coverage_ratio >= 40.0) {
+                    color = "#006400";  // darkgreen
+                } else if (coverage_ratio >= 20.0) {
+                    color = "#ff8c00";  // darkorange
+                }
+                var matched_layer = L.geoJson(feature, {
+                    style: {
+                        "color": color,
+                        "weight": 2,
+                        "opacity": 0.5
+                    },
+                    onEachFeature: function(feature, layer) {
+                        layer.on('click', function() {
+                            $("#bldid").val(feature.properties.plateau_bldid);
+                        });
+                        layer.bindPopup(popup_message);
+                    },
+                }).addTo(map);
+                layers.push(matched_layer);
+            }
+            map.fitBounds(matched_layer.getBounds());
+        }).fail(function() {
+            alert("Plateau 建物が見つかりません");
+        }).always(function() {
+            $("#check_note").html("検索完了");
+        });
+    });
+
+    $("#mappingButton").on("click", function() {
+        let fd = new FormData($("#upload_form")[0]);
+        $("#mapping_note").html("処理中です。しばらくお待ちください。");
+        $.ajax({
+            url: "{{ url_for('api.match_las') }}",
+            type: "POST",
+            data: fd,
+            processData: false,
+            contentType: false,
+            cache: false,
+            xhr:function() {
+                var xhr = new XMLHttpRequest();
+                xhr.responseType = "blob";
+                return xhr;
+            },
+        }).done(function(blob) {
+            let zipfile = "obj3d_" + $("#bldid").val() + "_lod" + $("#lod").val() + "_" + $("#mapping_method").val() + "_" + $("#size").val() + "_" + $("#limit").val() + ".zip";
+            let url = (window.URL || window.webkitURL).createObjectURL(blob);
+            let link = document.createElement('a');
+            link.style.display = 'none';
+            link.href = url;
+            link.download = zipfile;
+            link.click();
+            (window.URL || window.webkitURL).revokeObjectURL(url);
+        }).fail(function() {
+            alert("Error");
+        }).always(function() {
+            $("#mapping_note").html("処理完了");
+        });
+    });
+
+</script>
+{% endblock %}

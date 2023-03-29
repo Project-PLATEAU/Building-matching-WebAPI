@@ -1,0 +1,66 @@
+version: "3.9"
+
+services:
+
+  gdal:
+    container_name: gdal
+    image: osgeo/gdal:latest
+    volumes:
+      - type: bind
+        source: ./data
+        target: /data
+        read_only: true
+      - type: bind
+        source: ./conf
+        target: /conf
+        read_only: true
+
+  pg15:
+    container_name: pg15
+    image: postgis/postgis:15-3.3-alpine
+    volumes:
+      - type: volume
+        source: pg15_data
+        target: /var/lib/postgresql/data/
+      - type: bind
+        source: ./conf
+        target: /conf
+        read_only: true
+      - type: bind
+        source: ./data
+        target: /data
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - 15432:5432
+
+volumes:
+    pg15_data: {}
+
+#   citydb:
+#     container_name: citydb
+#     image: 3dcitydb/3dcitydb-pg:latest
+#     volumes:
+#       - type: volume
+#         source: citydb_data
+#         target: /var/lib/postgresql/data/
+#       - type: bind
+#         source: ./sql
+#         target: /sql
+#     environment:
+#       - POSTGRES_PASSWORD=citydb
+#       - SRID=6697
+#       - POSTGIS_SFCGAL=true
+#     ports:
+#       - 15432:5432
+
+#   impexp:
+#     container_name: impexp
+#     image: 3dcitydb/impexp:latest
+#     volumes:
+#       - type: bind
+#         source: ./data
+#         target: /data
+
+# volumes:
+#   citydb_data: {}
