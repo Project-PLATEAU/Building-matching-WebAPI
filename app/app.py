@@ -29,7 +29,7 @@ def match3d():
 @app.route('/<path:path>')
 def index(path):
     readme_html = 'README'
-    with open(Path(__name__).parent / "WebAPI.md") as f:
+    with open(Path(__name__).parent / "README.md") as f:
         readme_html = markdown.markdown(f.read())
 
     return render_template(
