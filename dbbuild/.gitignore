@@ -1,0 +1,5 @@
+*
+!/conf
+!docker-compose.yml
+!gdal_operation.md
+!.gitignore
