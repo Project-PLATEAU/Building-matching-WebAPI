@@ -4,6 +4,7 @@ import os
 from typing import List, Optional
 
 import geopandas as gpd
+import pandas as pd
 import shapely
 from shapely.geometry import Polygon
 from sqlalchemy import create_engine
@@ -107,15 +108,13 @@ class Database(object):
         if lod == 2:
             tablename = Plateau_LOD2.__tablename__
 
+        sql_str = "SELECT fid, bldid, geom3d AS geom FROM " +\
+        tablename + " WHERE bldID='" + bldid +"'"
+
         with self.engine.connect() as con:
-            sql = (
-                "SELECT fid, bldid, geom3d AS geom FROM "
-                f"{tablename} WHERE bldID=%s")
-            gdf = gpd.GeoDataFrame.from_postgis(
-                sql=sql,
-                con=con,
-                geom_col="geom",
-                params=[bldid])
+            sql = (sql_str)
+            gdf = gpd.GeoDataFrame.from_postgis(sql, con, geom_col="geom")
+            logger.info(gdf.head())
 
             if len(gdf) == 0:
                 return None
@@ -141,15 +140,13 @@ class Database(object):
         if lod == 2:
             tablename = Plateau_LOD2.__tablename__
 
+        sql_str = "SELECT fid, bldid, geom FROM " +\
+        tablename + " WHERE bldID='" + bldid +"'"
+
         with self.engine.connect() as con:
-            sql = (
-                "SELECT fid, bldid, geom FROM "
-                f"{tablename} WHERE bldID=%s")
-            gdf = gpd.GeoDataFrame.from_postgis(
-                sql=sql,
-                con=con,
-                geom_col="geom",
-                params=[bldid])
+            sql = (sql_str)
+            gdf = gpd.GeoDataFrame.from_postgis(sql, con, geom_col="geom")
+            logger.info(gdf.head())
 
             if len(gdf) == 0:
                 return None

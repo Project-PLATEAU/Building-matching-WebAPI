@@ -11,7 +11,7 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     python3 -m pip install -r /tmp/requirements.txt
 
 COPY ./app /app/app
-COPY WebAPI.md ./wsgi.py /app/
+COPY README.md ./wsgi.py /app/
 
 ENV FLASK_APP=app FLASK_DEBUG=1
 
