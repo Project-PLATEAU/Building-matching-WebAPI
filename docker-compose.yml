@@ -29,8 +29,6 @@ services:
         target: /app/app
     ports:
       - 5000:5000
-      
+
 volumes:
-  pgdb_data: {}
-  volume_pgadmin:
-    name: vpga
+  pgdb_data: {}  
