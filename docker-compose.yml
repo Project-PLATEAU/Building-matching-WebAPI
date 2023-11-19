@@ -29,20 +29,7 @@ services:
         target: /app/app
     ports:
       - 5000:5000
-
-  service_pgadmin:
-    image: dpage/pgadmin4:6.11
-    container_name: container_pgadmin_postgis
-    ports:
-      - 8080:80
-    volumes:
-      - volume_pgadmin:/var/lib/pgadmin
-    environment:
-      PGADMIN_DEFAULT_EMAIL: example@example.com # TODO: dotenvの設定
-      PGADMIN_DEFAULT_PASSWORD: password # TODO: dotenvの設定
-    depends_on:
-      - pgdb
-
+      
 volumes:
   pgdb_data: {}
   volume_pgadmin:
