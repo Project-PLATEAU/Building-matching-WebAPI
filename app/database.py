@@ -4,7 +4,6 @@ import os
 from typing import List, Optional
 
 import geopandas as gpd
-import pandas as pd
 import shapely
 from shapely.geometry import Polygon
 from sqlalchemy import create_engine
