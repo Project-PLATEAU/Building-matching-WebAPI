@@ -31,4 +31,4 @@ services:
       - 5000:5000
 
 volumes:
-  pgdb_data: {}  
+  pgdb_data: {}
